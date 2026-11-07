@@ -12,9 +12,9 @@ SRC := $(wildcard src/*.c) src/device/$(DEVICE).c
 
 PKGS := sdl2 SDL2_image SDL2_ttf
 VERSION ?= 0.0
-# A different VERSION from the last build's deletes the binary. See Makefile.
-ifneq ($(VERSION),$(shell cat $(BUILD)/version 2>/dev/null))
-$(shell mkdir -p $(BUILD) && rm -f $(BUILD)/tortos && echo '$(VERSION)' > $(BUILD)/version)
+# Switching devices must not reuse the previous platform binary.
+ifneq ($(VERSION) $(DEVICE),$(shell cat $(BUILD)/version 2>/dev/null))
+$(shell mkdir -p $(BUILD) && rm -f $(BUILD)/tortos && echo '$(VERSION) $(DEVICE)' > $(BUILD)/version)
 endif
 CFLAGS := -DTORTOS_VERSION='"$(VERSION)"' -O1 -g -Wall -Wextra -Wno-unused-parameter -std=gnu11 -D_GNU_SOURCE \
           $(shell pkg-config --cflags $(PKGS))
@@ -55,3 +55,12 @@ $(NOTES): FORCE
 $(BUILD)/tortos: $(SRC) $(CREDS) $(NOTES) $(wildcard src/*.h)
 	mkdir -p $(BUILD)
 	$(CC) $(CFLAGS) -o $@ $(SRC) $(LDLIBS)
+
+# The input regression uses real SDL virtual joysticks, not mapping stubs.
+.PHONY: check-smartpro
+check-smartpro:
+	@mkdir -p $(BUILD)
+	$(CC) $(CFLAGS) -ffunction-sections -fdata-sections -Wl,--gc-sections \
+	      -o $(BUILD)/smartpro-check tools/smartpro-check.c src/device/smartpro.c \
+	      src/platform.c src/db.c src/atomic.c $(LDLIBS)
+	SDL_JOYSTICK_ALLOW_BACKGROUND_EVENTS=1 ./$(BUILD)/smartpro-check

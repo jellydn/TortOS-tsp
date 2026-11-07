@@ -8,6 +8,9 @@ SRC := $(wildcard src/*.c) src/device/$(DEVICE).c
 CC ?= aarch64-linux-gnu-gcc
 
 VERSION ?= 0.0
+ifneq ($(VERSION) $(DEVICE),$(shell cat $(BUILD)/version 2>/dev/null))
+$(shell mkdir -p $(BUILD) && rm -f $(BUILD)/tortos.elf && echo '$(VERSION) $(DEVICE)' > $(BUILD)/version)
+endif
 CFLAGS := -DTORTOS_VERSION='"$(VERSION)"' -O2 -mcpu=cortex-a53 -Wall -Wextra -Wno-unused-parameter -std=gnu11 \
           -I$(SYSROOT)/usr/include/SDL2 -D_GNU_SOURCE
 # No undefined symbols allowed, in this code or in the libraries it links:

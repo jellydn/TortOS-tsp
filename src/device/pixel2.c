@@ -909,7 +909,7 @@ bool plat_has_wifi(void)      { return access("/sys/class/net/wlan0", F_OK) == 0
 bool plat_has_bluetooth(void) { return false; }
 
 /* FUNCTION with volume up or down (key_event). */
-bool plat_brightness_on_volume(void) { return true; }
+const char *plat_brightness_modifier(void) { return "FN"; }
 
 /* The side lights, and L2+R2 asking gauge for the level (key_event). */
 bool plat_battery_lights(void) { return true; }

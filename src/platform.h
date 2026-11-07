@@ -296,9 +296,8 @@ bool plat_battery(int *pct, bool *charging);
 bool plat_has_wifi(void);
 bool plat_has_bluetooth(void);
 
-/* Whether brightness is FUNCTION with the volume keys, the device having no
- * brightness keys of its own. What MENU > Controls calls them (controls.h). */
-bool plat_brightness_on_volume(void);
+/* Brightness modifier label, or NULL for dedicated F1/F2. */
+const char *plat_brightness_modifier(void);
 
 /* Whether the device shows the battery on lights of its own, L2 with R2
  * flashing the level there outside a game (the Pixel 2's four side lights,

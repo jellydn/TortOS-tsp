@@ -1019,7 +1019,7 @@ bool plat_has_wifi(void)      { return true; }
 bool plat_has_bluetooth(void) { return true; }
 
 /* F1 and F2, the front function keys. */
-bool plat_brightness_on_volume(void) { return false; }
+const char *plat_brightness_modifier(void) { return NULL; }
 
 /* No lights of its own for the battery. */
 bool plat_battery_lights(void) { return false; }

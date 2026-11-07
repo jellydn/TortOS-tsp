@@ -38,7 +38,7 @@ static const char *const BUTTONS[] = {
 #define NBUTTONS ((int)(sizeof BUTTONS / sizeof BUTTONS[0]))
 
 /* The Brick's front function keys are FUNCTION with the volume keys on the
- * Pixel 2 (ctl_set_fn_volume): each device's pages name its own, and never
+ * Pixel 2 (ctl_set_volume_modifier): each device's pages name its own, and never
  * the other's. L2+R2 is the Pixel 2's battery level (ctl_set_battery_lights),
  * which the Brick has no lights for. */
 static bool pixel;
@@ -263,13 +263,21 @@ int main(void)
 	direction_changes_the_shelf();
 	for (int d = 0; d < 2; d++) {
 		pixel = d == 1;
-		ctl_set_fn_volume(pixel);
+		ctl_set_volume_modifier(pixel ? "FN" : NULL);
 		ctl_set_battery_lights(pixel);
 		printf("on the %s:\n", pixel ? "Pixel 2" : "Brick");
 		every_button_somewhere();
 		no_page_repeats();
 		rows_fit();
 	}
+	ctl_set_volume_modifier("MENU");
+	menu_row smart[CTL_MAX_ROWS];
+	int n = ctl_rows(CTL_ANYWHERE, CTL_HORIZONTAL, smart);
+	bool brightness = false;
+	for (int i = 0; i < n; i++)
+		if (smart[i].label && !strcmp(smart[i].label, "MENU+Vol") &&
+		    smart[i].value && !strcmp(smart[i].value, "Brightness")) brightness = true;
+	ck(brightness, "Smart Pro names MENU, not Pixel 2 FN, for brightness");
 
 	if (fails) {
 		printf("\n%d failure%s\n", fails, fails == 1 ? "" : "s");

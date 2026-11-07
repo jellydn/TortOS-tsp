@@ -6859,7 +6859,7 @@ static void controls_screen(app *a)
 	ctl_page page = CTL_SHELF;
 	bool done = false;
 
-	ctl_set_fn_volume(plat_brightness_on_volume());
+	ctl_set_volume_modifier(plat_brightness_modifier());
 	ctl_set_battery_lights(plat_battery_lights());
 
 	while (!done && !want_quit && a->running) {
@@ -11554,7 +11554,7 @@ static void take_shot(app *a)
 		ctl_page p = (ctl_page)(shot_controls % CTL_PAGES);
 		int n;
 
-		ctl_set_fn_volume(plat_brightness_on_volume());
+		ctl_set_volume_modifier(plat_brightness_modifier());
 		ctl_set_battery_lights(plat_battery_lights());
 		n = ctl_rows(p, controls_dir(), rows);
 

@@ -49,11 +49,8 @@ const char *ctl_page_name(ctl_page p);
  * track in Muse. */
 int ctl_rows(ctl_page p, ctl_dir dir, menu_row *out);
 
-/* Whether brightness is FUNCTION with the volume keys, on a device with no
- * brightness keys of its own (the Pixel 2, plat_brightness_on_volume): the
- * pages then name those where the Brick's say F1/F2, and Muse's lock is
- * FUNCTION with both. The Brick's names until it is set. */
-void ctl_set_fn_volume(bool on);
+/* Device label: FN on Pixel2, MENU on Smart Pro, NULL for dedicated F1/F2. */
+void ctl_set_volume_modifier(const char *key);
 
 /* Whether the device shows the battery on lights of its own and L2+R2 flashes
  * the level there (the Pixel 2, plat_battery_lights): the shelf's page then
